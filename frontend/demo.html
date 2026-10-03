@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GreenHouse</title>
+    <link rel="icon" href="img/icons(3).png" type="image/png">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/modaltab.css">
+    <link rel="stylesheet" href="css/new_index.css">
+</head>
+<style>
+    /* ---public---- */
+    .centerBox {
+        width: 75%;
+        margin-right: 15px;
+        background: transparent;
+    }
+
+    .boxFont {
+        font-size: 1.2vw;
+    }
+
+    .centerMainBox1 {
+        width: 100%;
+        height: 60.5%;
+    }
+
+    .centerMainBox2 {
+        width: 100%;
+        height: 38%;
+        position: relative;
+        margin-top: 15px;
+    }
+
+    .centerMainBox2 .first_border {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .boxTitle2 {
+        width: 100%;
+        height: 10%;
+        font-size: .6vw;
+        text-align: center;
+        line-height: 10%;
+        margin-top: 1vw;
+        color: #0efcff;
+    }
+
+    .contList {
+        position: relative;
+        width: 70%;
+        height: 8vw;
+        margin: 1vw auto 0;
+
+    }
+
+    .content1 li {
+        display: none;
+    }
+
+    .baseBox {
+        width: 100%;
+        border: none;
+        background: none;
+    }
+
+    .boxTitle {
+        font-size: .8vw;
+        width: 38%;
+        margin-top: 1vw;
+        text-align: center;
+    }
+
+    .right {
+        float: right;
+    }
+
+    .baseBoxLeft {
+        width: 30%;
+        height: 95%;
+        position: relative;
+    }
+
+    .baseBoxRight {
+        width: 68%;
+        height: 100%;
+    }
+
+    .baseBoxLeft .first_border {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+
+    .baseBox1,
+    .baseBox2,
+    .baseBox3 {
+        position: relative;
+    }
+
+    .baseBox1 .hardware,
+    .baseBox2 img,
+    .baseBox3 img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .csbaseBox1 {
+        position: relative;
+        z-index: 999;
+    }
+
+    #canvas {
+        display: block;
+        margin: 0 auto;
+        width: 10vw;
+        height: 5vw;
+    }
+
+    .progress {
+        position: relative;
+    }
+
+    .progress img {
+        width: 12.5vw;
+        height: 2vw;
+        position: absolute;
+        top: .4vw;
+        right: -.2vw;
+    }
+
+    .progress .disease {
+        position: absolute;
+        top: .7vw;
+        left: .5vw;
+        color: #fff;
+        font-size: .8vw;
+    }
+
+    .progress .similar {
+        position: absolute;
+        top: .8vw;
+        left: 3vw;
+        color: #0efcff;
+        font-size: .5vw;
+    }
+
+    /* 返回图标 */
+    .navLeft{
+        position: absolute;
+        top:5%;
+        left:35%;
+        width: 3.5%;
+        height: 8%;
+        z-index: 999;
+    }
+    .navLeft>img{
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<body>
+    <div class="main">
+        <div class="nav">SMART GREEN HOUSE</div>
+        <div class="nav_btn">
+            <div class="btn_left">
+                <a href="javascript:location.reload();">
+                    <div class="btn_list listActive">Trang Chủ</div>
+                </a>
+                
+                <a href="javascript:void(0)" onclick="openModal('modalGioiThieu')">
+                    <div class="btn_list">Giới Thiệu</div>
+                </a>
+                
+                <a href="javascript:void(0)" onclick="openModal('modalLienHe')">
+                    <div class="btn_list">Liên Hệ</div>
+                </a>
+            </div>
+            <div class="btn_right">
+                <a href="javascript:void(0)" onclick="openModal('modalDuLieu')">
+                    <div class="btn_list">Dữ liệu</div>
+                </a>
+            </div>
+        </div>
+        <div class="content">
+
+            <div class="centerBox">
+                <div class="baseBox centerMainBox1" style="height:70%">
+                    <div class="baseBoxLeft left">
+                        <div class="boxTitle">Cảnh báo</div>
+                        <img src="./img/left.png" class="first_border" alt="">
+                        <div class="firstBox">
+                            <div class="pic">
+                                <img src="img/demo_pic.png" class="first_top1" alt="">
+                                <img src="img/data_pic.png" class="first_top2" alt="">
+                            </div>
+                            <div class="picText">
+                                <span>Hình mẫu</span>
+                                <span class="text_second">Dịch bệnh</span>
+                            </div>
+                            <div class="voice_animation">
+                                <canvas id="canvas">Your browser can not support canvas</canvas>
+                            </div>
+                            <div class="progress">
+                                <span class="disease">BƠM </span>
+                                <!-- <i class="counter-value">85</i>% -->
+                                <span class="similar">85%</span>
+                                <img src="./img/progress.gif" alt="">
+                            </div>
+                            <div class="about_illness">
+                                <div class="symptom">
+                                    <div class="symptom_title">Triệu chứng</div>
+                                    <div class="symptom_content">如需合作，请联系qq:863512936
+                                    </div>
+                                </div>
+                                <div class="prevent">
+                                    <div class="prevent_title">防治方法</div>
+                                    <div class="prevent_content">
+                                        1.如需合作，请联系qq:863512936
+                                        2.如需商用，请联系qq:863512936
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="baseBoxRight right">
+
+                        <a class="navLeft" href="#"><img style="" src="./img/fanhui.png" alt=""></a>
+
+                        <!-- 地图 -->
+                        <div class="maps">
+                            <img class="land_level" src="img/nhakinh.jpg" alt="">
+                            <img class="wifi_gif" src="img/wifi.gif"></img>
+                            <img class="sun_pic" src="img/sun.png" alt="">
+                            <img class="wrj_pic" src="img/wrj.png" alt="">
+                            <img class="wind_gif" src="img/wind_shape.gif" alt="">
+                            <img class="plant_pic display_box" src="img/plant.png" alt="">
+                            <div class="windows display_box">
+                                <ul>
+                                    <li>土地信息</li>
+                                    <li>如需商用：</li>
+                                    <li>qq：863512936</li>
+                                    <li>如需合作：</li>
+                                    <li>qq：863512936</li>
+                                    <li>qq：863512936</li>
+                                </ul>
+                            </div>
+                            <div class="window_two display_box">
+                                <ul>
+                                    <li>刘新武</li>
+                                    <li>年龄：41岁</li>
+                                    <li>农事活动：6次</li>
+                                    <li>信用等级：良好</li>
+                                </ul>
+                            </div>
+                            <div class="window_three display_box">
+                                <ul>
+                                    <li>土壤数据</li>
+                                    <li>湿度:63%</li>
+                                    <li>酸碱度：PH4.8</li>
+                                    <li>肥沃度：56%</li>
+                                </ul>
+                            </div>
+                            <div class="window_four display_box">
+                                <ul>
+                                    <li>气象信息</li>
+                                    <li>Nhiệt Độ:19℃</li>
+                                    <li>Độ Ẩm：52%</li>
+                                    <li>风速：2m/s</li>
+                                    <li>降水：0mm</li>
+                                </ul>
+                            </div>
+                            <div class="window_five display_box">
+                                <ul>
+                                    <li>植被信息</li>
+                                    <li>品种名称:云台山大叶良种</li>
+                                    <li>植株数量：76000株</li>
+                                    <li>所属生长周期：幼年期</li>
+                                    <li>长势情况：良好</li>
+                                </ul>
+                            </div>
+                            <div class="window_six display_box">
+                                <ul>
+                                    <li>设备信息</li>
+                                    <li>设备名称:无人机</li>
+                                    <li>所属人：安化云台八角有限公司</li>
+                                    <li>持续工作：3h</li>
+                                    <li>连接状态：正常</li>
+                                </ul>
+                            </div>
+                            <a href="#"><div class="peasant"></div></a>
+                            <div class="land_box1"></div>
+                            <div class="land_box2"></div>
+                            <div class="land_box3"></div>
+                            <div class="land_box4"></div>
+                            <div class="plant"></div>
+                            <div class="soil_data"></div>
+                            <div class="weather_info"></div>
+                            <!-- <div class="plant_info"></div> -->
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 左侧下部 -->
+                <div class="baseBox centerMainBox2" style="height:30%;">
+                    <img src="./img/down2.png" class="first_border" alt="">
+                    <div class="boxTitle2" style="width:26%;">Dữ Liệu Hệ Thống</div>
+                    <div class="boxTitle2" style="width:26%;margin-left:22vw;margin-top: -1.4vw;">Dữ Liệu Tăng Trưởng</div>
+                    <div class="boxTitle2" style="width:26%;margin-left:53vw;margin-top: -1.4vw;">Dữ liệu khí tượng</div>
+                    <div class="leftBottom">
+                        <div class="land_data">
+                            <p>10cm, nhiệt độ 30°C, độ ẩm 67%</p>
+                            <p>20cm, nhiệt độ 30°C, độ ẩm 67%</p>
+                            <p>30cm, nhiệt độ 30°C, độ ẩm 67%
+                        </div>
+
+                    </div>
+                    <div class="right_box">
+                        <div class="grow_data">
+                            <img src="img/tree_pic.png" alt="">
+                            <p>Chu kỳ tăng trưởng: 8 tuần</p>
+                            <p>đất sét </p>
+                            <p>Đất trà 10cm: 22,88%</p>
+                            <span>Dự báo lượng mưa trong 5 ngày tới: 0 mm</span>
+                            <i></i>
+                            
+                            
+                        </div>
+                        <div class="weather_data">
+                            <div class="weather_text text_one">
+                                <span>Nhiệt Độ：19℃</span>
+                                <span>Độ Ẩm：52%</span>
+                                <span>Hướng gió: ?</span>
+                                <span>tốc độ gió: ?</span>
+                            </div>
+                            <div class="weather_text text_two">
+                                <span>Mưa: Yes </span>
+                                <span>Bay hơi: ?</span>
+                                <span>Áp suất không khí: ?</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+            
+            <div class="leftBox right" style="width:22%">
+                <div class="baseBox baseBox1" style="margin-bottom:15px;height:40%">
+                    <img src="./img/right.png" class="hardware" alt="">
+                    <div class="csbaseBox1">
+                        <div class="boxTitle">Thiết Bị</div>
+                        <ul class="boxLis">
+                            <li class="left active">QUẠT</li>
+                            <li class="left">BƠM</li>
+                            <li class="left">CỬA NHÀ</li>
+                            <li class="left">CỬA MÁI</li>
+                            <li class="left"> ĐÈN </li>
+                            <li class="left"> LED </li>
+                            
+                        </ul>
+                        <div class="content1">
+                            <ul>
+                                <li style="display: block;" class="contList">
+                                    <!-- 四个角描边 stat -->
+                                    <div class="leftTopLine1"></div>
+                                    <div class="leftTopLine2"></div>
+                                    <div class="rightTopLine1"></div>
+                                    <div class="rightTopLine2"></div>
+                                    <div class="leftBottomLine1"></div>
+                                    <div class="leftBottomLine2"></div>
+                                    <div class="rightBottomLine1"></div>
+                                    <div class="rightBottomLine2"></div>
+
+                                    <div class="equipment_pic">
+                                        <img class="first" src="img/quat.jpg" alt="">
+                                        <img class="second" src="img/bom.png" alt="">
+                                        <img class="third" src="img/cua.jpg" alt="">
+                                        <img class="fourth" src="img/cuamai.png" alt="">
+                                        <img class="fiverth" src="img/den.jpg" alt="">
+                                        <img class="sixrth" src="img/led.jpg" alt="">
+                                    </div>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                        <div class="liSpan">Điều Khiển</div>
+       <div class="control-container" style="padding: 10px; position: relative; z-index: 1000;">
+    
+    <div class="main-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px dashed #444; padding-bottom: 10px;">
+        <div class="auto-group" style="display: flex; align-items: center; gap: 5px;">
+            <span style="color: #0efcff; font-size: 0.7vw;">Auto:</span>
+            <label class="switch-toggle">
+                <input type="checkbox" id="autoCheck" onchange="toggleAuto()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="btn-group" style="display: flex; gap: 3px;">
+            <button id="btnOn" onclick="sendCmd('ON')" class="ctrl-btn btn-on">BẬT</button>
+            <button id="btnOff" onclick="sendCmd('OFF')" class="ctrl-btn btn-off">TẮT</button>
+        </div>
+    </div>
+
+    <div id="ledAdvanced" style="display: none;">
+        <div style="display: flex; justify-content: space-between; gap: 5px;">
+            
+            <div style="width: 50%; border-right: 1px solid #444; padding-right: 5px;">
+                <div style="color: #0efcff; font-size: 0.7vw; margin-bottom: 5px; text-align: center;">Tăng trưởng</div>
+                <div style="text-align: center; color: #fff; font-size: 0.9vw; font-weight: bold; margin-bottom: 5px;">
+                    <span id="dimVal">50</span>%
+                </div>
+                <input type="range" class="custom-range" min="0" max="100" value="50" oninput="updateDim(this.value)">
+                <div style="font-size: 0.6vw; color: #aaa; text-align: center; margin-top: 2px;">Độ sáng</div>
+            </div>
+
+            <div style="width: 50%; display: flex; flex-direction: column; align-items: center;">
+                <div style="color: #0efcff; font-size: 0.7vw; margin-bottom: 5px; text-align: center;">Màu RGB</div>
+                
+                <div class="color-wrapper-small">
+                    <input type="color" oninput="updateRGB(this.value)" style="opacity: 0; width: 100%; height: 100%; cursor: pointer;">
+                </div>
+                
+                <div id="hexVal" style="font-size: 0.6vw; color: #aaa; margin-top: 5px;">#FFFFFF</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+                        
+                        </div>
+                </div>
+
+                <div class="baseBox baseBox2" style="margin-bottom:15px;height:29.5%">
+                    <img src="./img/right2.png" alt="">
+                    <!-- 四个角描边 end -->
+                    <div class="boxTitle2">Dữ liệu</div>
+                    <div class="irrigate_data">
+                        <div class="irrigate_top">
+                            <div class="centerList">
+                                <div class="centerListFont">Lượng nước</div>
+                                <div class="centerListNum">
+                                    <span class="">23678</span>
+                                </div>
+                            </div>
+                            <div class="centerList">
+                                <div class="centerListFont">Áp suất</div>
+                                <div class="centerListNum">
+                                    <span class="">0.29</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="irrigate_bottom">
+                            <div class="every_line">
+                                <span>Hiện tại tưới tiêu lưu lượng</span>
+                                <i class="">0.78</i>
+                            </div>
+                            <div class="every_line">
+                                <span>Số lượng  tưới hiện tại</span>
+                                
+                                <i class="counter-value">49</i>
+                                <i class="counter-value">2</i>
+                            </div>
+                            <div class="every_line">
+                                <span>Mực nước vườn </span>
+                                <i>2.30</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="baseBox baseBox3" style="height:28%">
+                    <img src="./img/right3.png" alt="">
+                    <!-- 四个角描边 end -->
+                    <div class="boxTitle2">Nhật ký dữ liệu</div>
+                    <!-- <div class="data_day" id="demo" > -->
+                    <div class="data_day" id="demo" style="width:100%;overflow:hidden;height: 75%;">
+                        <table style="text-align: left;margin-left:10%;height:80%;">
+                            <tbody id="demo1">
+                                <!-- <tr class="head">
+                                    <td>编号</td>
+                                    <td>数据类型</td>
+                                    <td>数据值</td>
+                                    <td>时间</td>
+                                </tr> -->
+                                <tr>
+                                    <td>u78</td>
+                                    <td>传感器数据</td>
+                                    <td>163.28</td>
+                                    <td>2019年10月26日</td>
+                                </tr>
+
+                                <tr>
+                                    <td>006</td>
+                                    <td>无人机数据</td>
+                                    <td>130.67</td>
+                                    <td>2019年10月25日</td>
+                                </tr>
+
+                                <tr>
+                                    <td>s07</td>
+                                    <td>控制器数据</td>
+                                    <td>163.28</td>
+                                    <td>2019年10月25日</td>
+                                </tr>
+                                <tr>
+                                    <td>872</td>
+                                    <td>监视器数据</td>
+                                    <td>130.67</td>
+                                    <td>2019年10月24日</td>
+                                </tr>
+                                <tr>
+                                    <td>d59</td>
+                                    <td>土壤仪数据</td>
+                                    <td>163.28</td>
+                                    <td>2019年10月23日</td>
+                                </tr>
+
+                                <tr>
+                                    <td>299</td>
+                                    <td>灌溉阀数据</td>
+                                    <td>130.67</td>
+                                    <td>2019年10月23日</td>
+                                </tr>
+                                <tr>
+                                    <td>256</td>
+                                    <td>传感器数据</td>
+                                    <td>163.28</td>
+                                    <td>2019年10月22日</td>
+                                </tr>
+                                <tr>
+                                    <td>026</td>
+                                    <td>无人机数据</td>
+                                    <td>130.67</td>
+                                    <td>2019年10月20日</td>
+                                </tr>
+                                <tr>
+                                    <td>037</td>
+                                    <td>传感器数据</td>
+                                    <td>163.28</td>
+                                    <td>2019年10月22日</td>
+                                </tr>
+                            </tbody>
+                            <tbody id="demo2" style="text-align: left;margin-left:10%"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+<!--modeal-->
+
+<!-- modal giới thiệu -->
+    <div id="modalGioiThieu" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('modalGioiThieu')">&times;</span>
+        <div class="modal-header">Giới Thiệu Hệ Thống</div>
+        <div class="modal-body">
+            <p>Hệ thống <strong>SMART GREEN HOUSE</strong> là giải pháp nông nghiệp thông minh tích hợp công nghệ IoT (Internet of Things).</p>
+            <br>
+            <ul style="list-style-type: circle; padding-left: 20px;">
+                <li>Giám sát nhiệt độ, độ ẩm, ánh sáng theo thời gian thực.</li>
+                <li>Tự động điều khiển hệ thống tưới tiêu, quạt gió và mái che.</li>
+                <li>Phân tích dữ liệu đất và dự báo thời tiết.</li>
+                <li>Tăng năng suất cây trồng và giảm thiểu sức lao động.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<!-- modal lien he -->
+<div id="modalLienHe" class="modal-overlay">
+    <div class="modal-content modal-lg"> <span class="close-btn" onclick="closeModal('modalLienHe')">&times;</span>
+        <div class="modal-header">THÔNG TIN LIÊN HỆ & HỖ TRỢ</div>
+        
+        <div class="modal-body custom-scroll">
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2 style="color: #0efcff; text-transform: uppercase;">NỘI THẤT G3TD</h2>
+                    <ul class="info-list">
+                        <li><b>Địa chỉ:</b> 194 Võ Văn Kiệt, Phường Cầu Ông Lãnh, Quận 1, TPHCM</li>
+                        <li><b>Hotline:</b> 0977 744 477 - <b>CSKH:</b> 015 0597 337</li>
+                        <li><b>Email:</b> web@gmail.com</li>
+                        <li><b>Github:</b> <a href="https://github.com/ThuanVan060504/Final-Project" target="_blank">Link Project</a></li>
+                        <li><b>Ngân hàng:</b> MBbank - 060008086888</li>
+                    </ul>
+                    <p class="note-text">
+                        Quý khách có thể gửi liên hệ tới chúng tôi bằng cách hoàn tất biểu mẫu dưới đây.
+                    </p>
+                </div>
+                <div class="contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.669726937899!2d106.69788731474876!3d10.759917092332762!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f1b7c3ed289%3A0xa06651894598e488!2s194%20V%C3%B5%20V%C4%83n%20Ki%E1%BB%87t%2C%20Ph%C6%B0%E1%BB%9Dng%20C%E1%BA%A7u%20%C3%94ng%20L%C3%A3nh%2C%20Qu%E1%BA%ADn%201%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh%2C%20Vietnam!5e0!3m2!1sen!2s!4v1639032000000!5m2!1sen!2s" 
+                        allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <hr class="neon-line">
+
+            <div class="contact-bottom">
+                <div class="contact-form">
+                    <h3>Gửi thông tin hỗ trợ</h3>
+                    <form onsubmit="return false;">
+                        <input type="text" placeholder="Họ và tên" required>
+                        <input type="text" placeholder="Số điện thoại" required>
+                        <input type="email" placeholder="Email" required>
+                        <textarea rows="3" placeholder="Nội dung cần hỗ trợ..."></textarea>
+                        <button type="submit" class="neon-btn">GỬI YÊU CẦU</button>
+                    </form>
+                </div>
+
+                <div class="contact-team">
+                    <h3>Thành viên nhóm</h3>
+                    <table class="neon-table">
+                        <thead>
+                            <tr>
+                                <th>Họ tên</th>
+                                <th>MSSV</th>
+                                <th>Lớp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Võ Duy Toàn</td><td>2200002076</td><td>22BITV03</td></tr>
+                            <tr><td>Nguyễn T.H. Diệu</td><td>2200001765</td><td>22BITV03</td></tr>
+                            <tr><td>Phan Minh Thuận</td><td>2200010286</td><td>22BITV03</td></tr>
+                            <tr><td>Nguyễn Văn Thuận</td><td>2200009501</td><td>22BITV03</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- modal dữ liệu -->
+<div id="modalDuLieu" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('modalDuLieu')">&times;</span>
+        <div class="modal-header">Báo Cáo Dữ Liệu</div>
+        <div class="modal-body">
+            <p>Dữ liệu tổng hợp tháng 12/2023:</p>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 10px; color: #fff;">
+                <tr style="border-bottom: 1px solid #0efcff;">
+                    <th style="padding: 8px;">Chỉ số</th>
+                    <th style="padding: 8px;">Trung bình</th>
+                    <th style="padding: 8px;">Trạng thái</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;">Nhiệt độ</td>
+                    <td style="padding: 8px;">25°C</td>
+                    <td style="padding: 8px; color: #0f0;">Ổn định</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;">Độ ẩm</td>
+                    <td style="padding: 8px;">65%</td>
+                    <td style="padding: 8px; color: #0f0;">Tốt</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;">Độ PH đất</td>
+                    <td style="padding: 8px;">6.5</td>
+                    <td style="padding: 8px; color: yellow;">Cần theo dõi</td>
+                </tr>
+            </table>
+            <br>
+            <p style="text-align: center; font-style: italic; font-size: 0.8em; color: #aaa;">Dữ liệu được cập nhật mỗi 5 phút.</p>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+<script src="https://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+<script src="https://www.jq22.com/jquery/echarts-4.2.1.min.js"></script>
+<script src="js/dataScoll.js"></script>
+<!-- 文字滚动 -->
+<script language="javascript" type="text/javascript">
+
+    var demo = document.getElementById("demo");
+    var demo1 = document.getElementById("demo1");
+    var demo2 = document.getElementById("demo2");
+    var speed = 15;    //滚动速度值，值越大速度越慢
+    demo2.innerHTML = demo1.innerHTML    //克隆demo2为demo1
+    function Marquee() {
+        if (demo2.offsetTop - demo.scrollTop <= 45) {
+           // console.log('77777')  //当滚动至demo1与demo2交界时
+            demo.scrollTop -= demo1.offsetHeight    //demo跳到最顶端
+        } else {
+            //console.log('88888')
+            demo.scrollTop++
+        }
+    }
+    var MyMar = setInterval(Marquee, speed);        //设置定时器
+    demo.onmouseover = function () { clearInterval(MyMar) }    //鼠标经过时清除定时器达到滚动停止的目的
+    demo.onmouseout = function () { MyMar = setInterval(Marquee, speed) }    //鼠标移开时重设定时器
+
+</script>
+<!-- <script type="text/javascript" src="js/digitalScroll.js"></script> -->
+<script>
+
+    var doublePI = Math.PI * 2;
+    var canvas;
+    var ctx;
+
+    //画布的高度的一半
+    var halfCanvasHeight = 100;
+    //水平边距
+    var horizontalMargin = 150;
+
+    //衰减系数(越大, 边缘衰减的就越多, 震动宽度相应也越窄)
+    var attenuationCoefficient = 2;
+    //半波长个数-1
+    var halfWaveCount = 20;
+    //振幅是画布高度的一般的百分比[0,1]
+    var amplitudePercentage = 0.3;
+    //每帧增加的弧度[0,2PI](作用于sin曲线, 正值相当于原点右移, 曲线左移)
+    var radianStep = 0.4;
+
+    //当前弧度的偏移
+    var radianOffset = 0;
+    //画布宽度
+    var canvasWidth;
+
+    function init() {
+        canvas = document.getElementById("canvas");
+        ctx = canvas.getContext("2d");
+        window.addEventListener("resize", onResize);
+
+        canvas.height = halfCanvasHeight * 2;
+        onResize();
+        loop();
+    }
+
+    function onResize() {
+        //元素的大小不能加单位, 单位默认就是像素, 而style中的长度要加单位
+        canvasWidth = canvas.width = window.innerWidth - horizontalMargin;
+    }
+
+    //设K=attenuationCoefficient, 计算信号衰减 (4K/(4K+x^4))^2K<=1 (x belong [-K,K])
+    function calcAttenuation(x) {
+        return Math.pow(4 * attenuationCoefficient / (4 * attenuationCoefficient + Math.pow(x, 4)), 2 * attenuationCoefficient);
+    }
+
+    //heightPercentage为振幅的显示比例
+    function drawAcousticWave(heightPercentage, alpha, lineWidth) {
+        ctx.strokeStyle = "white";
+        ctx.globalAlpha = alpha;
+        ctx.lineWidth = lineWidth || 1;
+        ctx.beginPath();
+        ctx.moveTo(0, halfCanvasHeight);
+        var x, y;
+        for (var i = -attenuationCoefficient; i <= attenuationCoefficient; i += 0.01) {
+            //i是当前位置相对于整个长度的比率( x=width*(i+K)/(2*K))
+            x = canvasWidth * (i + attenuationCoefficient) / (2 * attenuationCoefficient);
+            //加offset相当于把sin曲线向右平移
+            y = halfCanvasHeight + halfCanvasHeight * amplitudePercentage * calcAttenuation(i) * heightPercentage * Math.sin(halfWaveCount * i + radianOffset);
+            ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    function loop() {
+        radianOffset = (radianOffset + radianStep) % doublePI;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawAcousticWave(1, 1, 2);
+        for (var i = 2; i < 4; i++) {
+            var reciprocal = 1 / i;
+            drawAcousticWave(reciprocal, reciprocal / 4);
+            drawAcousticWave(-reciprocal, reciprocal / 4);
+        }
+        requestAnimationFrame(loop);
+    }
+
+    init();
+    setInterval(function () {
+        numInit();
+    }, 6500)
+
+    // mark center display
+    $('.peasant').mouseenter(function () {
+        console.log(111)
+        console.log($('.window_two'))
+        $('.window_two').removeClass('display_box')
+    })
+    $('.peasant').mouseout(function () {
+        $('.window_two').addClass('display_box')
+    })
+
+
+
+    $('.land_box1').mouseenter(function () {
+        console.log(15556)
+        $('.windows').removeClass('display_box')
+    })
+    $('.land_box2').mouseenter(function () {
+        console.log(15556)
+        $('.windows').removeClass('display_box')
+    })
+    $('.land_box3').mouseenter(function () {
+        console.log(15556)
+        $('.windows').removeClass('display_box')
+    })
+    $('.land_box4').mouseenter(function () {
+        console.log(15556)
+        $('.windows').removeClass('display_box')
+    })
+
+    $('.land_box1').mouseout(function () {
+        $('.windows').addClass('display_box')
+    })
+    $('.land_box2').mouseout(function () {
+        $('.windows').addClass('display_box')
+    })
+    $('.land_box3').mouseout(function () {
+        $('.windows').addClass('display_box')
+    })
+    $('.land_box4').mouseout(function () {
+        $('.windows').addClass('display_box')
+    })
+
+
+    $('.plant').mouseenter(function () {
+        $('.plant_pic').removeClass('display_box')
+        $('.window_five').removeClass('display_box')
+    })
+    $('.plant').mouseout(function () {
+        $('.plant_pic').addClass('display_box')
+        $('.window_five').addClass('display_box')
+    })
+
+    $('.soil_data').mouseenter(function () {
+        $('.window_three').removeClass('display_box')
+    })
+    $('.soil_data').mouseout(function () {
+        $('.window_three').addClass('display_box')
+    })
+
+    $('.weather_info').mouseenter(function () {
+        $('.window_four').removeClass('display_box')
+    })
+    $('.weather_info').mouseout(function () {
+        $('.window_four').addClass('display_box')
+    })
+
+    $('.wrj_pic').mouseenter(function () {
+        $('.window_six').removeClass('display_box')
+    })
+    $('.wrj_pic').mouseout(function () {
+        $('.window_six').addClass('display_box')
+    })
+
+
+
+    $('.boxLis').on('mouseenter', 'li', function () {
+
+        var that = $(this);
+
+        that.addClass('active').siblings().removeClass('active');
+
+        $('.equipment_pic img').hide();
+
+        $('.equipment_pic img').eq(that.index()).show()
+
+
+    })
+
+    setInterval(function () {
+        numInit();
+        numInit1();
+        numInit2();
+    }, 6000)
+</script>
+
+
+
+<script>
+    // Hàm mở Modal
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "block";
+        
+        // Cập nhật lại class active cho menu
+        $('.btn_list').removeClass('listActive');
+        // Tìm thẻ cha của nút được click và thêm class active (nếu cần xử lý phức tạp hơn dùng $(this))
+    }
+
+    // Hàm đóng Modal
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "none";
+        
+        // Trả lại active cho trang chủ khi đóng
+        $('.btn_left a:first-child .btn_list').addClass('listActive');
+    }
+
+    // Đóng modal khi click ra ngoài vùng nội dung
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.style.display = "none";
+            $('.btn_left a:first-child .btn_list').addClass('listActive');
+        }
+    }
+    
+    // Xử lý hiệu ứng Active khi click vào menu
+    $('.btn_list').click(function(){
+        $('.btn_list').removeClass('listActive');
+        $(this).addClass('listActive');
+    });
+</script>
+
+<script>
+    // XỬ LÝ SỰ KIỆN CHỌN THIẾT BỊ (Kết hợp code cũ và code mới)
+    $('.boxLis').on('mouseenter', 'li', function () {
+        var that = $(this);
+        
+        // 1. Giữ nguyên logic cũ: Active class và hiển thị ảnh
+        that.addClass('active').siblings().removeClass('active');
+        $('.equipment_pic img').hide();
+        $('.equipment_pic img').eq(that.index()).show();
+
+        // 2. Logic MỚI: Kiểm tra xem có phải là LED không để hiện bảng điều khiển
+        var deviceName = that.text().trim().toUpperCase();
+        var ledPanel = document.getElementById('ledAdvanced');
+        
+        // Nếu tên thiết bị chứa chữ LED hoặc ĐÈN -> Hiện bảng điều khiển nâng cao
+        if (deviceName.includes('LED') || deviceName.includes('ĐÈN')) {
+            ledPanel.style.display = 'block';
+        } else {
+            ledPanel.style.display = 'none';
+        }
+    });
+
+    // CÁC HÀM XỬ LÝ NÚT BẤM MỚI
+    function toggleAuto() {
+        var isAuto = document.getElementById('autoCheck').checked;
+        document.getElementById('btnOn').disabled = isAuto;
+        document.getElementById('btnOff').disabled = isAuto;
+        // Hiệu ứng mờ nút khi bật Auto
+        if(isAuto) {
+            $('.ctrl-btn').css('opacity', '0.5');
+        } else {
+            $('.ctrl-btn').css('opacity', '1');
+        }
+    }
+
+    function sendCmd(cmd) {
+        console.log("Gửi lệnh: " + cmd);
+        // Tại đây bạn có thể thêm code gửi dữ liệu xuống Arduino/ESP32
+    }
+
+    function updateDim(val) {
+        document.getElementById('dimVal').innerText = val + '%';
+    }
+
+    function switchLedTab(type) {
+        // Ẩn hiện nội dung tab
+        document.getElementById('tab-growth').style.display = (type === 'growth') ? 'block' : 'none';
+        document.getElementById('tab-rgb').style.display = (type === 'rgb') ? 'block' : 'none';
+        
+        // Đổi màu nút Tab
+        if(type === 'growth') {
+            $('.led-tab').eq(0).addClass('active');
+            $('.led-tab').eq(1).removeClass('active');
+        } else {
+            $('.led-tab').eq(0).removeClass('active');
+            $('.led-tab').eq(1).addClass('active');
+        }
+    }
+</script>
+</html>

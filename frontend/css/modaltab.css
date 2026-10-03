@@ -1,0 +1,229 @@
+/* --- CSS CHO POPUP (MODAL) --- */
+.modal-overlay {
+    display: none; /* Ẩn mặc định */
+    position: fixed;
+    z-index: 10000; /* Đảm bảo nằm trên cùng */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.85); /* Nền đen mờ */
+    backdrop-filter: blur(5px); /* Làm mờ hậu cảnh */
+}
+
+.modal-content {
+    background: rgba(11, 23, 46, 0.95); /* Màu nền xanh đậm giống theme */
+    margin: 10% auto;
+    padding: 20px;
+    border: 2px solid #0efcff; /* Viền neon xanh */
+    box-shadow: 0 0 20px rgba(14, 252, 255, 0.5); /* Hiệu ứng phát sáng */
+    width: 50%;
+    color: #fff;
+    position: relative;
+    border-radius: 10px;
+    animation: zoomIn 0.3s ease-out; /* Hiệu ứng phóng to khi hiện */
+}
+
+/* Tiêu đề popup */
+.modal-header {
+    font-size: 1.5vw;
+    color: #0efcff;
+    border-bottom: 1px solid rgba(14, 252, 255, 0.3);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* Nội dung popup */
+.modal-body {
+    font-size: 1vw;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+/* Nút đóng X */
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 15px;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #0efcff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Animation */
+@keyframes zoomIn {
+    from {transform: scale(0.7); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
+/* --- CSS RIÊNG CHO MODAL LIÊN HỆ --- */
+
+
+/* 1. Chỉnh kích thước Modal to hơn */
+.modal-lg {
+    width: 70% !important;
+    height: 95% !important; /* TĂNG: Từ 85% lên 95% chiều cao màn hình */
+    margin: 1.5vh auto !important; /* GIẢM: Lề trên nhỏ lại (khoảng 1.5% chiều cao) để cân giữa */
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important; 
+    background: rgba(11, 23, 46, 0.98) !important; 
+}
+
+.modal-header {
+    flex-shrink: 0; /* Header không bị co lại */
+    padding: 15px;
+    background: rgba(14, 252, 255, 0.1);
+}
+
+/* 2. Phần nội dung cuộn được */
+.modal-body.custom-scroll {
+    flex-grow: 1;
+    overflow-y: auto; /* Cho phép cuộn dọc */
+    padding: 20px;
+    text-align: left !important; /* Ghi đè căn giữa cũ */
+}
+
+/* Tùy chỉnh thanh cuộn cho đẹp */
+.custom-scroll::-webkit-scrollbar { width: 8px; }
+.custom-scroll::-webkit-scrollbar-track { background: #0b172e; }
+.custom-scroll::-webkit-scrollbar-thumb { background: #0efcff; border-radius: 4px; }
+
+/* 3. Bố cục Chia đôi (Flexbox) */
+.contact-container, .contact-bottom {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* Mobile: Xuống dòng khi màn hình nhỏ */
+@media (max-width: 768px) {
+    .contact-container, .contact-bottom { flex-direction: column; }
+    .modal-lg { width: 95% !important; height: 90% !important; }
+}
+
+/* 4. Style cho Text và Link */
+.info-list { list-style: none; padding: 0; color: #ccc; line-height: 1.8; }
+.info-list li b { color: #0efcff; }
+.info-list a { color: #fff; text-decoration: underline; }
+.note-text { font-style: italic; color: #888; font-size: 0.9em; margin-top: 10px; }
+
+/* 5. Style cho Map */
+.contact-map { flex: 1; }
+.contact-map iframe { width: 100%; height: 100%; min-height: 200px; border: 1px solid #0efcff; border-radius: 5px; filter: invert(90%) hue-rotate(180deg); /* Map tối màu */ }
+
+/* 6. Style cho Form (Input phong cách Neon) */
+.contact-form { flex: 1; }
+.contact-form input, .contact-form textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    
+    color: #fff;
+
+    margin-bottom: 10px;
+    font-family: inherit;
+}
+.contact-form input:focus, .contact-form textarea:focus {
+    outline: none;
+    background: rgba(14, 252, 255, 0.1);
+    border-color: #0efcff;
+}
+
+/* Nút bấm Neon */
+.neon-btn {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #0efcff;
+    color: #0efcff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+.neon-btn:hover {
+    background: #0efcff;
+    color: #000;
+    box-shadow: 0 0 15px #0efcff;
+}
+
+/* 7. Style cho Bảng Thành Viên */
+.contact-team { flex: 1; }
+.neon-table { width: 100%; border-collapse: collapse; color: #fff; font-size: 0.9em; }
+.neon-table th { border-bottom: 1px solid #0efcff; color: #0efcff; padding: 8px; text-align: left; }
+.neon-table td { border-bottom: 1px solid rgba(14, 252, 255, 0.2); padding: 8px; }
+.neon-table tr:hover { background: rgba(14, 252, 255, 0.05); }
+
+.neon-line { border: 0; border-top: 1px dashed rgba(14, 252, 255, 0.3); margin: 20px 0; }
+
+
+
+
+
+
+
+
+
+
+.switch-toggle { position: relative; width: 30px; height: 16px; display: inline-block; }
+
+.switch-toggle input { opacity: 0; width: 0; height: 0; }
+
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .4s; border-radius: 34px; }
+
+.slider:before { position: absolute; content: ""; height: 10px; width: 10px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+
+input:checked + .slider { background-color: #0efcff; }
+
+input:checked + .slider:before { transform: translateX(14px); }
+
+
+
+/* Nút Bật Tắt */
+
+.ctrl-btn { border: none; padding: 3px 8px; border-radius: 3px; color: #fff; font-size: 0.6vw; cursor: pointer; font-weight: bold; }
+
+.btn-on { background: linear-gradient(#00b09b, #96c93d); }
+
+.btn-off { background: linear-gradient(#ff5f6d, #ffc371); }
+
+
+
+/* Slider Tăng trưởng */
+
+.custom-range { width: 100%; height: 4px; background: #555; outline: none; -webkit-appearance: none; border-radius: 5px; cursor: pointer;}
+
+.custom-range::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; background: #0efcff; border-radius: 50%; cursor: pointer; box-shadow: 0 0 5px #0efcff; }
+
+
+
+/* Vòng tròn màu nhỏ */
+
+.color-wrapper-small {
+
+    width: 35px; height: 35px;
+
+    border-radius: 50%;
+
+    background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+
+    border: 2px solid #fff;
+
+    overflow: hidden;
+
+    box-shadow: 0 0 8px rgba(255,255,255,0.2);
+
+} 

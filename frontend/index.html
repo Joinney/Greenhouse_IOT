@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GreenHouse G3TD</title>
+    <link rel="icon" href="img/icons(3).png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/modaltab.css">
+    <link rel="stylesheet" href="css/new_index.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* --- Styles Giữ Nguyên --- */
+        body { background: #0b1120; color: #fff; font-family: sans-serif; overflow: hidden; }
+        .centerBox { width: 75%; margin-right: 15px; background: transparent; }
+        .boxFont { font-size: 1.2vw; }
+        .centerMainBox1 { width: 100%; height: 60.5%; }
+        .centerMainBox2 { width: 100%; height: 38%; position: relative; margin-top: 15px; }
+        .centerMainBox2 .first_border { position: absolute; width: 100%; height: 100%; }
+        .boxTitle2 { width: 100%; height: 10%; font-size: .6vw; text-align: center; line-height: 10%; margin-top: 1vw; color: #0efcff; }
+        .contList { position: relative; width: 70%; height: 8vw; margin: 1vw auto 0; }
+        .content1 li { display: none; }
+        .baseBox { width: 100%; border: none; background: none; }
+        .boxTitle { font-size: .8vw; width: 38%; margin-top: 1vw; text-align: center; }
+        .right { float: right; }
+        
+        .baseBoxLeft { width: 30%; height: 95%; position: relative; display: flex; flex-direction: column; align-items: center; }
+        .baseBoxRight { width: 68%; height: 100%; }
+        .baseBoxLeft .first_border { width: 100%; height: 100%; position: absolute; top: 0; left: 0;  }
+        
+        .baseBox1, .baseBox2, .baseBox3 { position: relative; }
+        .baseBox1 .hardware, .baseBox2 img, .baseBox3 img { position: absolute; width: 100%; height: 100%; }
+        .csbaseBox1 { position: relative; z-index: 999; }
+        
+        .navLeft { position: absolute; top: 5%; left: 35%; width: 3.5%; height: 8%; z-index: 999; }
+        .navLeft>img { width: 100%; height: 100%; }
+        
+        .firebase-status {
+            position: absolute; top: 20px; right: 20px; z-index: 10000;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(15, 23, 42, 0.8); padding: 5px 15px;
+            border-radius: 20px; border: 1px solid #444;
+        }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff1744; box-shadow: 0 0 5px #ff1744; transition: 0.3s; }
+        .status-text { font-size: 12px; color: #aaa; font-weight: bold; }
+
+        .control-container { padding: 10px; position: relative; z-index: 1000; background: rgba(0,0,0,0.3); border-radius: 10px; margin: 0 10px; border: 1px solid #0efcff44; }
+        .ctrl-btn { padding: 5px 15px; border: 1px solid #444; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.8vw; color: white; transition: 0.3s; }
+        .btn-on { background: rgba(0, 230, 118, 0.2); border-color: #00e676; color: #00e676; }
+        .btn-on:hover { background: #00e676; color: #000; }
+        .btn-off { background: rgba(255, 23, 68, 0.2); border-color: #ff1744; color: #ff1744; }
+        .btn-off:hover { background: #ff1744; color: #fff; }
+        
+        .switch-toggle { position: relative; display: inline-block; width: 30px; height: 16px; }
+        .switch-toggle input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 16px; }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #0efcff; }
+        input:checked + .slider:before { transform: translateX(14px); }
+
+        .modal-overlay { display: none; position: fixed; z-index: 10001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); }
+        .modal-content { background-color: #1e293b; margin: 10% auto; padding: 20px; border: 1px solid #0efcff; width: 50%; border-radius: 10px; color: #fff; position: relative; box-shadow: 0 0 20px rgba(14, 252, 255, 0.3); }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .modal-header { font-size: 20px; color: #0efcff; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 10px; font-weight: bold; }
+        
+        .display_box { position: absolute; background: rgba(0, 0, 0, 0.8); border: 1px solid #0efcff; padding: 10px; border-radius: 5px; color: #fff; font-size: 0.8vw; display: none; z-index: 2000; }
+        .window_three { top: 60%; left: 20%; }
+        .window_four { top: 10%; left: 10%; }
+        
+        .sensor-zone { position: absolute; width: 100px; height: 100px; cursor: pointer; }
+        .zone-soil { bottom: 20%; left: 30%; }
+        .zone-air { top: 10%; left: 10%; }
+
+        .weather_data_new { width: 110%; height: 120%; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 5px; padding: 10px; box-sizing: border-box; }
+        .sensor-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .sensor-icon { width: 2vw; height: 2vw; object-fit: contain; margin-bottom: 3px; }
+        .sensor-label { font-size: 0.6vw; color: #ccc; margin-bottom: 2px; }
+        .sensor-value { font-size: 0.9vw; font-weight: bold; color: #0efcff; }
+
+        .charts-wrapper {
+            width: 90%; height: 85%; margin-top: 15px;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .chart-box {
+            position: relative; width: 100%; height: 48%;
+            border-radius: 5px; padding: 5px; box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="firebase-status">
+        <div id="fb-dot" class="status-dot"></div>
+        <div id="fb-text" class="status-text">Disconnected</div>
+    </div>
+
+    <div class="main">
+        <div class="nav">SMART GREEN HOUSE</div>
+        <div class="nav_btn">
+            <div class="btn_left">
+                <a href="javascript:location.reload();"><div class="btn_list listActive">Trang Chủ</div></a>
+                <a href="javascript:void(0)" onclick="openModal('modalGioiThieu')"><div class="btn_list">Giới Thiệu</div></a>
+                <a href="javascript:void(0)" onclick="openModal('modalLienHe')"><div class="btn_list">Liên Hệ</div></a>
+            </div>
+            <div class="btn_right">
+                <a href="javascript:void(0)" onclick="openModal('modalDuLieu')"><div class="btn_list">Dữ liệu</div></a>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="centerBox">
+                <div class="baseBox centerMainBox1" style="height:70%">
+                    
+                    <div class="baseBoxLeft left">
+                        <div class="boxTitle">Theo dõi Môi trường</div>
+                        <img src="./img/left.png" class="first_border" alt="">
+                        <div class="charts-wrapper">
+                            <div class="chart-box"><canvas id="tempChart"></canvas></div>
+                            <div class="chart-box"><canvas id="soilChart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <div class="baseBoxRight right">
+                        <a class="navLeft" href="#"><img style="" src="./img/fanhui.png" alt=""></a>
+                        <div class="maps">
+                            <img class="land_level" src="img/nhakinh.jpg" alt="">
+                            <img class="wifi_gif" src="img/wifi.gif"></img>
+                            <img class="sun_pic" src="img/sun.png" alt="">
+                            <img class="wrj_pic" src="img/wrj.png" alt="">
+                            <img class="wind_gif" src="img/wind_shape.gif" alt="">
+                            <img class="plant_pic display_box" src="img/plant.png" alt="">
+                            
+                            <div class="window_three display_box" id="popup-soil">
+                                <ul><li style="color:#00e676">ĐẤT TRỒNG</li><li>Độ ẩm: <span id="popup-soil-val">--</span>%</li><li>Trạng thái: <span id="popup-soil-st">--</span></li></ul>
+                            </div>
+                            <div class="window_four display_box" id="popup-air">
+                                <ul><li style="color:#ffea00">KHÔNG KHÍ</li><li>Nhiệt: <span id="popup-temp">--</span>°C</li><li>Ẩm: <span id="popup-humi">--</span>%</li><li>Mưa: <span id="popup-rain">--</span></li></ul>
+                            </div>
+                            
+                            <a href="#"><div class="peasant"></div></a>
+                            <div class="sensor-zone zone-air" onmouseenter="showId('popup-air')" onmouseleave="hideId('popup-air')"></div>
+                            <div class="sensor-zone zone-soil" onmouseenter="showId('popup-soil')" onmouseleave="hideId('popup-soil')"></div>
+                            <div class="land_box1"></div><div class="land_box2"></div><div class="land_box3"></div><div class="land_box4"></div>
+                            <div class="plant"></div><div class="soil_data"></div><div class="weather_info"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="baseBox centerMainBox2" style="height:30%;">
+                    <img src="./img/down2.png" class="first_border" alt="">
+                    <div class="boxTitle2" style="width:26%;">Dữ Liệu Hệ Thống</div>
+                    <div class="boxTitle2" style="width:26%;margin-left:22vw;margin-top: -1.4vw;">Dữ Liệu Tăng Trưởng</div>
+                    <div class="boxTitle2" style="width:26%;margin-left:53vw;margin-top: -1.4vw;">Dữ liệu khí tượng</div>
+                    
+                    <div class="leftBottom">
+                        <div class="land_data">
+                            <p>Kết nối: <span id="sys-conn" style="color: #0efcff;">Firebase</span></p>
+                            <p>Thời gian: <span id="sys-time">--</span></p>
+                        </div>
+                    </div>
+
+                    <div class="right_box">
+                        <div class="grow_data">
+                            <img src="img/tree_pic.png" alt="">
+                            <p style="color: #2979ff; font-weight: bold;">🌱 ĐẤT & MƯA</p>
+                            <p>Độ ẩm đất: <span id="val-soil" style="color:#0efcff; font-weight:bold; font-size:1.2vw;">--</span>%</p>
+                            <p>Cảm biến mưa: <span id="val-rain-text" style="color:#facc15">--</span></p>
+                        </div>
+                        
+                        <div class="weather_data" style="padding:0; overflow:hidden;">
+                            <div class="weather_data_new">
+                                <div class="sensor-card"><div class="sensor-label">Nhiệt Độ</div><div class="sensor-value"><span id="val-temp">--</span>°C</div></div>
+                                <div class="sensor-card"><div class="sensor-label">Độ Ẩm</div><div class="sensor-value"><span id="val-humi">--</span>%</div></div>
+                                <div class="sensor-card"><div class="sensor-label">Ánh sáng</div><div class="sensor-value"><span id="val-light">--</span></div></div>
+                                <div class="sensor-card"><div class="sensor-label">Gió</div><div class="sensor-value"><span id="val-wind">--</span></div></div>
+                                <div class="sensor-card"><div class="sensor-label">Trạng thái Mưa</div><div class="sensor-value" id="val-rain" style="color: #facc15;">--</div></div>
+                                <div class="sensor-card"><div class="sensor-label">Cửa mái</div><div class="sensor-value" id="st-roof">--</div></div>
+                                <div class="sensor-card"><div class="sensor-label">Cửa chính</div><div class="sensor-value" id="st-door">--</div></div>
+                                <div class="sensor-card"></div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="leftBox right" style="width:22%">
+                <div class="baseBox baseBox1" style="margin-bottom:15px;height:40%">
+                    <img src="./img/right.png" class="hardware" alt="">
+                    <div class="csbaseBox1">
+                        <div class="boxTitle">Thiết Bị</div>
+                        <ul class="boxLis" id="device-list">
+                            <li class="left active" data-dev="fan">QUẠT</li>
+                            <li class="left" data-dev="pump">BƠM</li>
+                            <li class="left" data-dev="door">CỬA NHÀ</li>
+                            <li class="left" data-dev="roof">CỬA MÁI</li>
+                            <li class="left" data-dev="room">ĐÈN</li>
+                            <li class="left" data-dev="grow">LED</li>
+                        </ul>
+                        <div class="content1">
+                            <ul>
+                                <li style="display: block;" class="contList">
+                                    <div class="leftTopLine1"></div><div class="leftTopLine2"></div>
+                                    <div class="rightTopLine1"></div><div class="rightTopLine2"></div>
+                                    <div class="leftBottomLine1"></div><div class="leftBottomLine2"></div>
+                                    <div class="rightBottomLine1"></div><div class="rightBottomLine2"></div>
+                                    <div class="equipment_pic">
+                                        <img class="first" src="img/quat.jpg" alt="" style="display:block">
+                                        <img class="second" src="img/bom.png" alt="" style="display:none">
+                                        <img class="third" src="img/cua.jpg" alt="" style="display:none">
+                                        <img class="fourth" src="img/cuamai.png" alt="" style="display:none">
+                                        <img class="fiverth" src="img/den.jpg" alt="" style="display:none">
+                                        <img class="sixrth" src="img/led.jpg" alt="" style="display:none">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="liSpan">Điều Khiển <span id="current-dev-name" style="color:#0efcff">(QUẠT)</span></div>
+                        
+                        <div class="control-container">
+                            <div class="main-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px dashed #444; padding-bottom: 10px;">
+                                <div class="auto-group" style="display: flex; align-items: center; gap: 5px;">
+                                    <span style="color: #0efcff; font-size: 0.7vw;">Auto:</span>
+                                    <label class="switch-toggle">
+                                        <input type="checkbox" id="autoCheck" onchange="toggleAuto()">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="btn-group" style="display: flex; gap: 3px;">
+                                    <button id="btnOn" onclick="sendCmd('on')" class="ctrl-btn btn-on">BẬT</button>
+                                    <button id="btnOff" onclick="sendCmd('off')" class="ctrl-btn btn-off">TẮT</button>
+                                </div>
+                            </div>
+
+                            <div id="ledAdvanced" style="display: none;">
+                                <div style="display: flex; justify-content: space-between; gap: 5px;">
+                                    <div style="width: 50%; border-right: 1px solid #444; padding-right: 5px;">
+                                        <div style="color: #0efcff; font-size: 0.7vw; margin-bottom: 5px; text-align: center;">Chế độ</div>
+                                        <button onclick="controlGrow('mode','manual')" style="width:100%; margin-bottom:5px; font-size:0.6vw; cursor:pointer; background:#333; color:white; border:1px solid #555;">Màu Tĩnh</button>
+                                        <button onclick="controlGrow('mode','fade')" style="width:100%; font-size:0.6vw; cursor:pointer; background: linear-gradient(90deg, red, yellow, green, blue, violet); color:white; border:none; font-weight:bold;">Rainbow</button>
+                                    </div>
+                                    <div style="width: 50%; display: flex; flex-direction: column; align-items: center;">
+                                        <div style="color: #0efcff; font-size: 0.7vw; margin-bottom: 5px; text-align: center;">Màu RGB</div>
+                                        <input type="color" id="rgbPicker" onchange="controlGrow('color', this.value)" style="width: 100%; height: 30px; cursor: pointer;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="baseBox baseBox2" style="margin-bottom:15px;height:29.5%">
+                    <img src="./img/right2.png" alt="">
+                    <div class="boxTitle2">Thống kê</div>
+                    <div class="irrigate_data">
+                        <div class="irrigate_top">
+                            <div class="centerList">
+                                <div class="centerListFont">Trạng thái Bơm</div><div class="centerListNum"><span id="st-pump-txt" class="">--</span></div>
+                            </div>
+                            <div class="centerList">
+                                <div class="centerListFont">Khoảng cách cửa</div><div class="centerListNum"><span id="st-dist-txt" class="">--</span></div>
+                            </div>
+                        </div>
+                        <div class="irrigate_bottom">
+                            <div class="every_line"><span>Chế độ Quạt</span><i id="st-fan-mode">--</i></div>
+                            <div class="every_line"><span>Chế độ Bơm</span><i id="st-pump-mode">--</i></div>
+                            <div class="every_line"><span>Trạng thái LED</span><i id="st-grow-txt">--</i></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="baseBox baseBox3" style="height:28%">
+     <img src="./img/right3.png" alt="">
+     <div class="boxTitle2">Nhật ký dữ liệu</div>
+     
+     <div class="data_day" id="demo" style="width:100%; overflow:hidden; height: 75%; position:relative;">
+        <table style="text-align: left; margin-left:10%; height:80%; width:90%; border-collapse: collapse;">
+            
+            <tbody id="demo1">
+                <tr><td>SYS</td><td>System Init</td><td>OK</td><td>08:00</td></tr>
+            </tbody>
+            
+            <tbody id="demo2"></tbody>
+            
+        </table>
+     </div>
+</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalGioiThieu" class="modal-overlay">
+        <div class="modal-content" style="width: 40%; border: 1px solid #0efcff; box-shadow: 0 0 20px rgba(14, 252, 255, 0.2);">
+            <span class="close-btn" onclick="closeModal('modalGioiThieu')">&times;</span>
+            <div class="modal-header">Giới Thiệu Hệ Thống</div>
+            
+            <div class="modal-body" style="text-align: left; color: #e0e0e0; font-size: 0.9vw; line-height: 1.6;">
+                <p style="margin-bottom: 15px;">
+                    <strong style="color: #0efcff; font-size: 1.2em;">Smart Greenhouse </strong> là giải pháp nông nghiệp thông minh 4.0, ứng dụng công nghệ IoT để tự động hóa toàn diện quy trình chăm sóc cây trồng.
+                </p>
+
+                <div style="border-top: 1px dashed #444; margin: 10px 0;"></div>
+
+                <h4 style="color: #2979ff; margin: 10px 0 5px 0;"> Tính năng nổi bật:</h4>
+                <ul style="list-style: none; padding-left: 5px; margin: 0;">
+                    <li style="margin-bottom: 5px;">- <strong>Giám sát Real-time:</strong> Theo dõi Nhiệt độ, Độ ẩm, Đất, Ánh sáng qua Firebase (độ trễ < 1s).</li>
+                    <li style="margin-bottom: 5px;">- <strong>Tự động hóa (Auto):</strong> Hệ thống tự ra quyết định (Mưa đóng mái, Nóng bật quạt, Khô bơm nước).</li>
+                    <li style="margin-bottom: 5px;">- <strong>LED RGB Control:</strong> Công nghệ đèn quang hợp tùy chỉnh màu sắc & chế độ Rainbow.</li>
+                    <li>- <strong>Data Logging:</strong> Lưu trữ lịch sử và vẽ biểu đồ trực quan (Chart.js).</li>
+                </ul>
+
+                <h4 style="color: #ffea00; margin: 15px 0 5px 0;"> Công nghệ lõi:</h4>
+                <p style="margin: 0; color: #aaa;">
+                    • <strong>Hardware:</strong> ESP32 S3 (Master) + Sensors.<br>
+                    • <strong>Cloud:</strong> Google Firebase Realtime Database.<br>
+                    • <strong>Interface:</strong> Modern Dashboard + Responsive Web.
+                </p>
+
+                <div style="margin-top: 20px; text-align: right; border-top: 1px solid #333; padding-top: 10px;">
+                    <span style="font-size: 0.8em; color: #aaa;">Developed by</span> <br>
+                    <strong style="color: #00e676; letter-spacing: 1px;">G3TD</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+   <!-- modal lien he -->
+<div id="modalLienHe" class="modal-overlay">
+    <div class="modal-content modal-lg"> <span class="close-btn" onclick="closeModal('modalLienHe')">&times;</span>
+        <div class="modal-header">THÔNG TIN LIÊN HỆ & HỖ TRỢ</div>
+        
+        <div class="modal-body custom-scroll">
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2 style="color: #0efcff; text-transform: uppercase;">NỘI THẤT G3TD</h2>
+                    <ul class="info-list">
+                        <li><b>Địa chỉ:</b>3F Nguyễn Hữu Thọ, Tân Hưng, Quận 7, Thành phố Hồ Chí Minh</li>
+                        <li><b>Hotline:</b> 0977 744 477 - <b>CSKH:</b> 015 0597 337</li>
+                        <li><b>Email:</b> web@gmail.com</li>
+                        <li><b>Github:</b> <a href="https://github.com/Joinney" target="_blank">Link Project</a></li>
+                        <li><b>Ngân hàng:</b> MBbank - 060008086888</li>
+                    </ul>
+                    <p class="note-text">
+                        Quý khách có thể gửi liên hệ tới chúng tôi bằng cách hoàn tất biểu mẫu dưới đây.
+                    </p>
+                </div>
+                <div class="contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d244.99302086195385!2d106.70165910698589!3d10.743088860684217!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f9fa1b72f8b%3A0x26780c08db949052!2zxJDhuqFpIGjhu41jIE5ndXnhu4VuIFThuqV0IFRow6BuaCBDxqEgc-G7nyBOZ3V54buFbiBI4buvdSBUaOG7jQ!5e0!3m2!1svi!2s!4v1767676056505!5m2!1svi!2s" 
+                        allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <hr class="neon-line">
+
+            <div class="contact-bottom">
+                <div class="contact-form">
+                    <h3>Gửi thông tin hỗ trợ</h3>
+                    <form onsubmit="return false;">
+                        <input type="text" placeholder="Họ và tên" required>
+                        <input type="text" placeholder="Số điện thoại" required>
+                        <input type="email" placeholder="Email" required>
+                        <textarea rows="3" placeholder="Nội dung cần hỗ trợ..."></textarea>
+                        <button type="submit" class="neon-btn">GỬI YÊU CẦU</button>
+                    </form>
+                </div>
+
+                <div class="contact-team">
+                    <h3>Thành viên nhóm</h3>
+                    <table class="neon-table">
+                        <thead>
+                            <tr>
+                                <th>Họ tên</th>
+                                <th>MSSV</th>
+                                <th>Lớp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Võ Duy Toàn</td><td>2200002076</td><td>22BITV03</td></tr>
+                            <tr><td>Nguyễn T.H. Diệu</td><td>2200001765</td><td>22BITV03</td></tr>
+                            <tr><td>Phan Minh Thuận</td><td>2200010286</td><td>22BITV03</td></tr>
+                            <tr><td>Nguyễn Văn Thuận</td><td>2200009501</td><td>22BITV03</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="modalDuLieu" class="modal-overlay">
+    <div class="modal-content" style="width: 80%; max-width: 800px;"> <span class="close-btn" onclick="closeModal('modalDuLieu')">&times;</span>
+        <div class="modal-header">Báo Cáo Lịch Sử</div>
+        
+        <div class="modal-body">
+            <div style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center; justify-content: center;">
+                <label for="history-date">Chọn ngày: </label>
+                <input type="date" id="history-date" style="padding: 5px; border-radius: 5px; border: 1px solid #0efcff; background: #111; color: #fff;">
+                <button onclick="loadHistory()" class="ctrl-btn btn-on" style="padding: 5px 20px;">Xem Dữ Liệu</button>
+            </div>
+
+            <div style="max-height: 400px; overflow-y: auto; border: 1px solid #444;">
+                <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 0.9vw;">
+                    <thead style="background: rgba(14, 252, 255, 0.2); position: sticky; top: 0;">
+                        <tr>
+                            <th style="padding: 10px; color: #0efcff;">Thời gian</th>
+                            <th style="padding: 10px; color: #ff1744;">Nhiệt độ</th>
+                            <th style="padding: 10px; color: #00e676;">Độ ẩm</th>
+                            <th style="padding: 10px; color: #2979ff;">Đất (%)</th>
+                            <th style="padding: 10px; color: #ffea00;">Ánh sáng</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                        <tr><td colspan="5" style="padding: 20px; color: #aaa;">Vui lòng chọn ngày để xem...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // 1. CẤU HÌNH FIREBASE
+    const firebaseConfig = {
+        apiKey: "AIzaSyDTFe35IUamuBKUZPt5UclmBYDdV50aI4c", // API Key
+        databaseURL: "https://greenhouseg3td-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // --- BIẾN TOÀN CỤC ---
+    let currentDevice = "fan"; 
+    let deviceStatus = {}; 
+    let tempChart, soilChart; 
+    let lastLogState = {}; // Lưu trạng thái để không ghi log trùng
+
+    // --- HIỆU ỨNG CUỘN (MARQUEE) ---
+    var speed = 50; 
+    var demo = document.getElementById("demo");
+    var demo1 = document.getElementById("demo1");
+    var demo2 = document.getElementById("demo2");
+    
+    // Copy nội dung để tạo hiệu ứng lặp
+    demo2.innerHTML = demo1.innerHTML;
+
+    function Marquee() {
+        // Khi demo2 chạy lên hết thì reset lại demo
+        if (demo2.offsetTop - demo.scrollTop <= 0) {
+            demo.scrollTop -= demo1.offsetHeight;
+        } else {
+            demo.scrollTop++;
+        }
+    }
+    
+    var MyMar = setInterval(Marquee, speed);
+    demo.onmouseover = function() { clearInterval(MyMar) };
+    demo.onmouseout = function() { MyMar = setInterval(Marquee, speed) };
+
+    // --- HÀM THÊM LOG ---
+    function addLog(source, message, status) {
+        var table = document.getElementById("demo1");
+        var row = table.insertRow(0); // Chèn lên đầu
+        var now = new Date();
+        var time = now.toLocaleTimeString();
+        var color = (status === "ON" || status === "OPEN" || status === "OK") ? "#00e676" : "#ff1744";
+
+        row.innerHTML = `
+            <td style="color:#aaa; width:15%">${source}</td>
+            <td style="width:40%">${message}</td>
+            <td style="color:${color}; font-weight:bold; width:20%">${status}</td>
+            <td style="color:#0efcff; width:25%">${time}</td>
+        `;
+
+        if (table.rows.length > 20) table.deleteRow(20); // Giới hạn 20 dòng
+        demo2.innerHTML = demo1.innerHTML; // Đồng bộ để cuộn mượt
+    }
+
+    // --- KHỞI TẠO 2 BIỂU ĐỒ ---
+    function initCharts() {
+        const ctxTemp = document.getElementById('tempChart').getContext('2d');
+        tempChart = new Chart(ctxTemp, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Nhiệt độ không khí (°C)',
+                    borderColor: '#ff1744',
+                    backgroundColor: 'rgba(255, 23, 68, 0.2)',
+                    borderWidth: 2,
+                    data: [],
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#ccc' } } },
+                scales: {
+                    x: { ticks: { color: '#888' }, grid: { display: false } },
+                    y: { beginAtZero: false, ticks: { color: '#ff1744' }, grid: { color: '#333' } }
+                }
+            }
+        });
+
+        const ctxSoil = document.getElementById('soilChart').getContext('2d');
+        soilChart = new Chart(ctxSoil, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Độ ẩm đất (%)',
+                    borderColor: '#00e676',
+                    backgroundColor: 'rgba(0, 230, 118, 0.2)',
+                    borderWidth: 2,
+                    data: [],
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#ccc' } } },
+                scales: {
+                    x: { ticks: { color: '#888' }, grid: { display: false } },
+                    y: { min: 0, max: 100, ticks: { color: '#00e676' }, grid: { color: '#333' } }
+                }
+            }
+        });
+    }
+
+    // --- LẮNG NGHE DỮ LIỆU ---
+    const dataRef = db.ref('greenhouse/live_data');
+    const connectedRef = db.ref(".info/connected");
+
+    connectedRef.on("value", (snap) => {
+        if (snap.val() === true) {
+            $('#fb-dot').css({'background-color': '#00e676', 'box-shadow': '0 0 5px #00e676'});
+            $('#fb-text').text("Connected").css('color', '#00e676');
+        } else {
+            $('#fb-dot').css({'background-color': '#ff1744', 'box-shadow': '0 0 5px #ff1744'});
+            $('#fb-text').text("Disconnected").css('color', '#ff1744');
+        }
+    });
+
+    dataRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if(!data) return;
+        deviceStatus = data;
+        updateUI(data);
+        updateCharts(data); 
+    });
+
+    function updateCharts(data) {
+        if (!tempChart || !soilChart || !data.sensors) return;
+        const now = new Date().toLocaleTimeString();
+        const temp = data.sensors.temperature || 0;
+        const soil = data.sensors.soil_moisture || 0;
+
+        tempChart.data.labels.push(now);
+        tempChart.data.datasets[0].data.push(temp);
+        
+        soilChart.data.labels.push(now);
+        soilChart.data.datasets[0].data.push(soil);
+
+        if (tempChart.data.labels.length > 20) {
+            tempChart.data.labels.shift(); tempChart.data.datasets[0].data.shift();
+            soilChart.data.labels.shift(); soilChart.data.datasets[0].data.shift();
+        }
+        tempChart.update(); soilChart.update();
+    }
+
+    function updateUI(data) {
+        document.getElementById('sys-time').innerText = new Date().toLocaleTimeString();
+
+        if (data.sensors) { 
+             updateText('val-temp', data.sensors.temperature); updateText('popup-temp', data.sensors.temperature); updateText('summary-temp', data.sensors.temperature);
+             updateText('val-humi', data.sensors.humidity); updateText('popup-humi', data.sensors.humidity); updateText('summary-humi', data.sensors.humidity);
+             updateText('val-soil', data.sensors.soil_moisture); updateText('popup-soil-val', data.sensors.soil_moisture);
+             updateText('val-light', data.sensors.light_lux); updateText('summary-light', data.sensors.light_lux);
+             
+             const rainTxt = data.sensors.rain_detected ? "Có Mưa" : "Tạnh";
+             updateText('val-rain', rainTxt); updateText('val-rain-text', rainTxt); updateText('popup-rain', rainTxt); updateText('main-rain-status', rainTxt);
+             
+             let soilSt = data.sensors.soil_moisture < 40 ? "Khô (Cần tưới)" : "Đủ ẩm";
+             updateText('popup-soil-st', soilSt);
+             updateText('st-dist-txt', data.sensors.door_distance + " cm");
+        } else {
+             updateText('val-temp', data.temp); updateText('val-humi', data.humi);
+        }
+
+        if (data.status) {
+            updateText('st-pump-txt', data.status.pump);
+            updateText('st-grow-txt', data.status.grow_light);
+            updateText('st-door', data.status.door === "OPEN" ? "MỞ" : "ĐÓNG");
+            updateText('st-roof', data.status.roof === "OPEN" ? "MỞ" : "ĐÓNG");
+        }
+        if (data.modes) {
+            updateText('st-pump-mode', data.modes.pump_mode);
+            updateText('st-fan-mode', data.modes.fan_mode);
+        }
+        updateControlPanelUI();
+    }
+
+    function updateText(id, val) {
+        const el = document.getElementById(id);
+        if(el) el.innerText = (val !== undefined) ? val : "--";
+    }
+
+    $('#device-list').on('mouseenter click', 'li', function () {
+        var that = $(this);
+        that.addClass('active').siblings().removeClass('active');
+        $('.equipment_pic img').hide();
+        $('.equipment_pic img').eq(that.index()).show();
+
+        currentDevice = that.attr('data-dev'); 
+        const devName = that.text();
+        $('#current-dev-name').text("(" + devName + ")");
+
+        if (currentDevice === 'grow') { $('#ledAdvanced').show(); } else { $('#ledAdvanced').hide(); }
+        updateControlPanelUI();
+    });
+
+    function updateControlPanelUI() {
+        if (!deviceStatus || !currentDevice) return;
+        
+        let isOn = false;
+        let isAuto = false;
+        
+        if (deviceStatus.status && deviceStatus.modes) {
+            switch(currentDevice) {
+                case 'fan': isOn = (deviceStatus.status.fan === "ON"); isAuto = (deviceStatus.modes.fan_mode === "AUTO"); break;
+                case 'pump': isOn = (deviceStatus.status.pump === "ON"); isAuto = (deviceStatus.modes.pump_mode === "AUTO"); break;
+                case 'door': isOn = (deviceStatus.status.door === "OPEN"); isAuto = (deviceStatus.modes.door_mode === "AUTO"); $('#btnOn').text("MỞ"); $('#btnOff').text("ĐÓNG"); break;
+                case 'roof': isOn = (deviceStatus.status.roof === "OPEN"); isAuto = (deviceStatus.modes.roof_mode === "AUTO"); $('#btnOn').text("MỞ"); $('#btnOff').text("ĐÓNG"); break;
+                case 'room': isOn = (deviceStatus.status.room_lamp === "ON"); isAuto = (deviceStatus.modes.lamp_mode === "AUTO"); $('#btnOn').text("BẬT"); $('#btnOff').text("TẮT"); break;
+                case 'grow': isOn = (deviceStatus.status.grow_light === "ON"); isAuto = false; $('#btnOn').text("BẬT"); $('#btnOff').text("TẮT"); break;
+            }
+        }
+
+        document.getElementById('autoCheck').checked = isAuto;
+        
+        if (isOn) {
+            $('#btnOn').addClass('active').css('opacity', '1'); $('#btnOff').removeClass('active').css('opacity', '0.5');
+        } else {
+            $('#btnOn').removeClass('active').css('opacity', '0.5'); $('#btnOff').addClass('active').css('opacity', '1');
+        }
+        
+        $('.ctrl-btn').prop('disabled', false).css('cursor', 'pointer');
+    }
+
+    function sendCmd(action) {
+        let val = action; 
+        if ((currentDevice === 'door' || currentDevice === 'roof') && action === 'on') val = 'open';
+        if ((currentDevice === 'door' || currentDevice === 'roof') && action === 'off') val = 'close';
+
+        const autoToggle = document.getElementById('autoCheck');
+        if (autoToggle.checked && currentDevice !== 'grow') {
+            autoToggle.checked = false;
+            db.ref('greenhouse/controls/' + currentDevice + '_mode').set('manual'); 
+            addLog(currentDevice.toUpperCase(), "Tự động tắt Auto", "MANUAL");
+        }
+
+        // Ghi log hành động
+        let statusLog = (action === 'on' || action === 'open') ? "ON" : "OFF";
+        addLog(currentDevice.toUpperCase(), "Điều khiển tay", statusLog);
+
+        const cmdRef = db.ref('greenhouse/controls/' + currentDevice);
+        cmdRef.set(val)
+            .then(() => console.log(`Đã gửi lệnh ${val} tới ${currentDevice}`))
+            .catch((e) => console.error(e));
+    }
+
+    function toggleAuto() {
+        const isChecked = document.getElementById('autoCheck').checked;
+        const val = isChecked ? 'auto' : 'manual'; 
+        const cmdRef = db.ref('greenhouse/controls/' + currentDevice);
+        cmdRef.set(val);
+        addLog(currentDevice.toUpperCase(), "Chuyển chế độ", val.toUpperCase());
+    }
+
+    function controlGrow(action, value) {
+        db.ref('greenhouse/controls/grow').set('on');
+
+        if (action === 'mode') {
+            db.ref('greenhouse/controls/grow_mode').set(value);
+            addLog("GROW LIGHT", "Chuyển chế độ", value.toUpperCase());
+        }
+        
+        if (action === 'color') {
+            let hex = value.replace('#', '');
+            db.ref('greenhouse/controls/grow_color').set(hex);
+            db.ref('greenhouse/controls/grow_mode').set('manual');
+            addLog("GROW LIGHT", "Đổi màu LED", hex);
+        }
+    }
+
+    // Modal helpers
+    function openModal(id) { document.getElementById(id).style.display = "block"; }
+    function closeModal(id) { document.getElementById(id).style.display = "none"; }
+    window.onclick = function(e) { if(e.target.classList.contains('modal-overlay')) e.target.style.display="none"; }
+    function showId(id) { document.getElementById(id).style.display = 'block'; }
+    function hideId(id) { document.getElementById(id).style.display = 'none'; }
+
+    // Init
+    initCharts(); 
+    $('.boxLis li').first().trigger('click');
+
+
+
+
+
+    // --- XỬ LÝ LỊCH SỬ DỮ LIỆU ---
+
+    // 1. Đặt ngày mặc định là hôm nay
+    document.getElementById('history-date').valueAsDate = new Date();
+
+    function loadHistory() {
+        const dateInput = document.getElementById('history-date').value;
+        if (!dateInput) { alert("Vui lòng chọn ngày!"); return; }
+
+        const tbody = document.getElementById('history-table-body');
+        tbody.innerHTML = '<tr><td colspan="5" style="padding: 20px;">Đang tải dữ liệu...</td></tr>';
+
+        // Tính toán Timestamp bắt đầu và kết thúc của ngày đã chọn
+        // Lưu ý: Code ESP32 gửi timestamp dạng giây (Unix Timestamp)
+        const selectedDate = new Date(dateInput);
+        const startTs = selectedDate.setHours(0, 0, 0, 0) / 1000;
+        const endTs = selectedDate.setHours(23, 59, 59, 999) / 1000;
+
+        // Truy vấn Firebase: orderByChild('ts')
+        // Bạn cần Index 'ts' trong Firebase Rules để chạy nhanh hơn
+        db.ref('greenhouse/history')
+            .orderByChild('ts')
+            .startAt(startTs)
+            .endAt(endTs)
+            .once('value')
+            .then((snapshot) => {
+                tbody.innerHTML = ''; // Xóa thông báo đang tải
+
+                if (!snapshot.exists()) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="padding: 20px; color: #ff1744;">Không có dữ liệu trong ngày này.</td></tr>';
+                    return;
+                }
+
+                // Duyệt qua dữ liệu và hiển thị (Đảo ngược để cái mới nhất lên đầu)
+                const dataArr = [];
+                snapshot.forEach(child => {
+                    dataArr.push(child.val());
+                });
+                dataArr.reverse(); // Đảo ngược mảng
+
+                dataArr.forEach(data => {
+                    // Xử lý hiển thị thời gian từ timestamp
+                    // const date = new Date(data.ts * 1000);
+                    // const timeStr = date.toLocaleTimeString(); 
+                    // Hoặc dùng chuỗi timestamp có sẵn nếu ESP32 đã gửi:
+                    const timeStr = data.timestamp ? data.timestamp.split(' ')[1] : new Date(data.ts*1000).toLocaleTimeString();
+
+                    const row = `
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 8px;">${timeStr}</td>
+                            <td style="padding: 8px; color: #ff1744;">${data.temp}°C</td>
+                            <td style="padding: 8px; color: #00e676;">${data.humi}%</td>
+                            <td style="padding: 8px; color: #2979ff;">${data.soil}%</td>
+                            <td style="padding: 8px; color: #ffea00;">${data.lux}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+                tbody.innerHTML = '<tr><td colspan="5" style="color: red;">Lỗi tải dữ liệu (Kiểm tra Rules hoặc Mạng)</td></tr>';
+            });
+    }
+
+
+
+    // ============================================
+    // LOGIC 1: HIỆU ỨNG CUỘN TỰ ĐỘNG (MARQUEE)
+    // ============================================
+    var speed = 40; // Tốc độ cuộn (càng nhỏ càng nhanh)
+    var demo = document.getElementById("demo");
+    var demo1 = document.getElementById("demo1");
+    var demo2 = document.getElementById("demo2");
+
+    // Copy nội dung từ demo1 sang demo2 để tạo hiệu ứng nối tiếp
+    demo2.innerHTML = demo1.innerHTML;
+
+    function Marquee() {
+        // Nếu demo2 đã trồi lên chạm đỉnh -> Reset lại vị trí thanh cuộn
+        if (demo2.offsetTop - demo.scrollTop <= 0) {
+            demo.scrollTop -= demo1.offsetHeight;
+        } else {
+            demo.scrollTop++; // Tăng vị trí cuộn pixel-by-pixel
+        }
+    }
+
+    // Bắt đầu chạy
+    var MyMar = setInterval(Marquee, speed);
+
+    // Di chuột vào thì dừng lại để đọc
+    demo.onmouseover = function() { clearInterval(MyMar) };
+    // Di chuột ra thì chạy tiếp
+    demo.onmouseout = function() { MyMar = setInterval(Marquee, speed) };
+
+
+    // ============================================
+    // LOGIC 2: HÀM GHI NHẬT KÝ (GỌI KHI CẦN)
+    // ============================================
+    function addLog(source, message, status) {
+        var table = document.getElementById("demo1");
+        var row = table.insertRow(0); // Luôn chèn vào dòng đầu tiên
+        
+        var now = new Date();
+        var timeStr = now.getHours().toString().padStart(2,'0') + ":" + 
+                      now.getMinutes().toString().padStart(2,'0') + ":" + 
+                      now.getSeconds().toString().padStart(2,'0');
+
+        // Định màu sắc cho trạng thái
+        var color = "#fff";
+        if(status === "ON" || status === "OPEN" || status === "OK") color = "#00e676"; // Xanh
+        else if(status === "OFF" || status === "CLOSE") color = "#ff1744"; // Đỏ
+        else if(status === "AUTO") color = "#2979ff"; // Xanh dương
+        else if(status === "MANUAL") color = "#ffea00"; // Vàng
+
+        row.innerHTML = `
+            <td style="color:#aaa; width:15%; font-size:0.8vw;">${source}</td>
+            <td style="width:40%; font-size:0.8vw;">${message}</td>
+            <td style="color:${color}; font-weight:bold; width:20%; font-size:0.8vw;">${status}</td>
+            <td style="color:#0efcff; width:25%; font-size:0.8vw;">${timeStr}</td>
+        `;
+
+        // Giới hạn chỉ giữ 20 dòng log để không bị nặng trình duyệt
+        if (table.rows.length > 20) {
+            table.deleteRow(20);
+        }
+
+        // Cập nhật lại demo2 để hiệu ứng cuộn không bị lệch nội dung
+        demo2.innerHTML = demo1.innerHTML;
+    }
+</script>
+
+</html>
